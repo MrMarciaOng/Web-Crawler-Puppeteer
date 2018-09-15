@@ -7,4 +7,8 @@ Example of login web crawler with download file function
 
 Cd into dir
 
+npm i puppeteer
+
+npm i
+
 node test.js
