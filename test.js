@@ -25,24 +25,38 @@ var sleep = require('system-sleep');
         console.log(XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[sheetToProcess]]));
         var temp = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[sheetToProcess]])
         await page.setViewport({ width, height })
-        var startIndex= 10001
-        var endIndex = 20000
-        await page.goto('https://www.wikidata.org/w/index.php?search');
+        var startIndex= 30001
+        var endIndex = 40000
+        var loopIndex = startIndex
+        await page.goto('https://www.wikidata.org/w/index.php?search', {
+           
+            waitUntil: 'networkidle2',
+            timeout: 3000000
+        });
         for(let x = startIndex; x < endIndex ; x++){
             console.log("processing "+ x +" out of "+temp.length)
+            loopIndex = x
             if(x==0 ){
-                await page.goto('https://www.wikidata.org/w/index.php?search');
+                await page.goto('https://www.wikidata.org/w/index.php?search',{
+           
+                    waitUntil: 'networkidle2',
+                    timeout: 3000000
+                });
             }
             if(x%20 ==0){
                 console.log("here")
                 await page.close();
                 page = await browser.newPage();
-                await page.goto('https://www.wikidata.org/w/index.php?search');
+                await page.goto('https://www.wikidata.org/w/index.php?search',{
+           
+                    waitUntil: 'networkidle2',
+                    timeout: 3000000
+                });
             }
             if(  temp[x].token != "null"){
 
                 
-                await page.type('input[name="search"]', temp[x].token) 
+                await page.type('input[name="search"]', temp[x].token.toString()) 
                
                 await page.click('button[type="submit"]')
                 await page.waitForNavigation()
@@ -117,6 +131,10 @@ var sleep = require('system-sleep');
     }catch(e){
 
         console.log(e)
+        var ws = XLSX.utils.json_to_sheet(temp);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "report");
+        XLSX.writeFile(wb, 'out index from '+startIndex +"-"+ endIndex +" end at "+loopIndex+" "+ (Date.now() % 171761)+'.xlsx');
     }
 })();
 
