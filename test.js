@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const request = require('request-promise');
 var fs = require('fs');
-
+var XLSX = require('xlsx');
 
 (async () => {
     try{
@@ -10,20 +10,37 @@ var fs = require('fs');
         const height = 1080
 
         const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             args:[
                 '--start-maximized' 
              ]
         } );
         const page = await browser.newPage();
-      
+        var workbook = XLSX.readFile('./excel_anno_40sheets_JiewenExample.xlsx');
+        var sheet_name_list = workbook.SheetNames;
+        console.log(XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]]));
+        var temp = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
         await page.setViewport({ width, height })
-        await page.goto('url');
 
-        await page.type('input[name="email"]', 'xxx') //document queryselector finding input tag with attribute name = "email"
-        await page.type('input[name="password"]', 'xxx')
-        await page.click('button[type="submit"]')
-        await page.waitForNavigation()
+        for(let x = 0; x < temp.length ; x++){
+            await page.goto('https://www.wikidata.org/w/index.php?search');
+            await page.type('input[name="search"]', temp[x].token) //document queryselector finding input tag with attribute name = "email"
+            await page.click('button[type="submit"]')
+            await page.waitForNavigation()
+            var listofitems = await page.$$('.mw-search-result-heading > a')
+            console.log(listofitems)
+            for (let y = 0 ; y < listofitems.length ; y++){
+
+                console.log(await listofitems[y].$eval('[attr=title]'))
+            }
+
+        }
+        
+
+        
+     
+        
+        
         await page.goto('url');
 
         await page.type('input[name="startDate"]', '01-09-2018') //form text input
