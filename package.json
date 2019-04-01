@@ -1,0 +1,22 @@
+{
+  "name": "web-crawler-puppeteer",
+  "version": "1.0.0",
+  "description": "Example of login web crawler with download file function",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://MrMarciaOng@github.com/MrMarciaOng/Web-Crawler-Puppeteer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrMarciaOng/Web-Crawler-Puppeteer/issues"
+  },
+  "homepage": "https://github.com/MrMarciaOng/Web-Crawler-Puppeteer#readme",
+  "dependencies": {
+    "puppeteer": "^1.14.0"
+  }
+}
