@@ -25,33 +25,21 @@ var sleep = require('system-sleep');
         console.log(XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[sheetToProcess]]));
         var temp = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[sheetToProcess]])
         await page.setViewport({ width, height })
-        var startIndex= 30001
-        var endIndex = 40000
+        var startIndex= 50001
+        var endIndex = 69999
         var loopIndex = startIndex
-        await page.goto('https://www.wikidata.org/w/index.php?search', {
-           
-            waitUntil: 'networkidle2',
-            timeout: 3000000
-        });
+        await page.goto('https://www.wikidata.org/w/index.php?search', {waitUntil: 'load', timeout: 0});
         for(let x = startIndex; x < endIndex ; x++){
             console.log("processing "+ x +" out of "+temp.length)
             loopIndex = x
             if(x==0 ){
-                await page.goto('https://www.wikidata.org/w/index.php?search',{
-           
-                    waitUntil: 'networkidle2',
-                    timeout: 3000000
-                });
+                await page.goto('https://www.wikidata.org/w/index.php?search', {waitUntil: 'load', timeout: 0});
             }
-            if(x%20 ==0){
+            if(x%100 ==0){
                 console.log("here")
                 await page.close();
                 page = await browser.newPage();
-                await page.goto('https://www.wikidata.org/w/index.php?search',{
-           
-                    waitUntil: 'networkidle2',
-                    timeout: 3000000
-                });
+                await page.goto('https://www.wikidata.org/w/index.php?search', {waitUntil: 'load', timeout: 0});
             }
             if(  temp[x].token != "null"){
 
